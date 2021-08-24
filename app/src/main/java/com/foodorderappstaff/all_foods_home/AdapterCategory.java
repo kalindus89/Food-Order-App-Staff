@@ -2,6 +2,7 @@ package com.foodorderappstaff.all_foods_home;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.foodorderappstaff.R;
+import com.foodorderappstaff.SessionManagement;
 import com.squareup.picasso.Picasso;
 
-public class AdapterCategory extends FirebaseRecyclerAdapter<CategoryModel,AdapterCategory.CatViewHolder> {
+public class AdapterCategory extends FirebaseRecyclerAdapter<CategoryModel,AdapterCategory.CatViewHolder>{
 
     Context context;
     FirebaseRecyclerOptions<CategoryModel> options;
-
 
     public AdapterCategory(@NonNull FirebaseRecyclerOptions<CategoryModel> options, Context context) {
         super(options);
@@ -28,10 +29,20 @@ public class AdapterCategory extends FirebaseRecyclerAdapter<CategoryModel,Adapt
         this.options = options;
     }
 
+
     @Override
     protected void onBindViewHolder(@NonNull CatViewHolder holder, int position, @NonNull CategoryModel model) {
 
 
+        holder.itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override
+            public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+                contextMenu.setHeaderTitle("Select the action");
+                contextMenu.add(0,0,holder.getAbsoluteAdapterPosition(), SessionManagement.UPDATE);
+                contextMenu.add(0,0,holder.getAbsoluteAdapterPosition(), SessionManagement.DELETE);
+
+            }
+        });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -40,6 +51,7 @@ public class AdapterCategory extends FirebaseRecyclerAdapter<CategoryModel,Adapt
                 context.startActivity(intent);*/
             }
         });
+
 
         holder.catName.setText(model.getName());
         Picasso.get().load(model.getImage()).placeholder(R.drawable.loading_image).into(holder.cateImage);
@@ -53,6 +65,7 @@ public class AdapterCategory extends FirebaseRecyclerAdapter<CategoryModel,Adapt
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_category_layout,parent,false);
         return new CatViewHolder(view);
     }
+
 
     public class CatViewHolder extends RecyclerView.ViewHolder {
         private TextView catName;

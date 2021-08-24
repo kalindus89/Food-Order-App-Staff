@@ -1,5 +1,6 @@
 package com.foodorderappstaff.all_foods_home;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -67,7 +69,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     ArrayList<CategoryModel> categoryModelArrayList;
 
     Uri saveUri;
-    private final int PICK_IMAGE_REQUEST=71;
+    private final int PICK_IMAGE_REQUEST = 71;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,16 +158,20 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeActivity.this);
         alertDialog.setTitle("Add New Category");
         alertDialog.setMessage("Please fill all information");
+        alertDialog.setPositiveButton("Upload", null);
+        alertDialog.setNegativeButton("Cancel", null);
 
+        final EditText editText = new EditText(HomeActivity.this);
 
         LayoutInflater inflater = this.getLayoutInflater();
-        View add_menu_layout= inflater.inflate(R.layout.add_new_food_menu_layout,null );
+        View add_menu_layout = inflater.inflate(R.layout.add_new_food_menu_layout, null);
 
-        EditText nameMenu=add_menu_layout.findViewById(R.id.nameMenu);
-        Button btnSelect=add_menu_layout.findViewById(R.id.btnSelect);
-
+        editText.setHint("Category");
         alertDialog.setView(add_menu_layout);
         alertDialog.setIcon(R.drawable.ic_baseline_shopping_cart_24);
+
+        EditText nameMenu = add_menu_layout.findViewById(R.id.nameMenu);
+        Button btnSelect = add_menu_layout.findViewById(R.id.btnSelect);
 
         btnSelect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,72 +180,72 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        final AlertDialog mAlertDialog = alertDialog.create();
+        mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onShow(DialogInterface dialog) {
 
-                if (nameMenu.getText().toString().isEmpty() || saveUri == null) {
+                Button b = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                b.setOnClickListener(new View.OnClickListener() {
 
-                    Toast.makeText(getApplicationContext(), "Fill both fields", Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onClick(View view) {
 
-                }else{
-                    ProgressBar progressBar = new ProgressBar(getApplicationContext());
-                    progressBar.setVisibility(View.VISIBLE);
+                        ProgressDialog dialog = ProgressDialog.show(HomeActivity.this, "",
+                                "Category Uploading. Please wait...", true);
+                        dialog.show();
+                        if (nameMenu.getText().toString().isEmpty() || saveUri == null) {
 
-                    String imageName= UUID.randomUUID().toString();
-                    storageReference=storageReference.child("All-Food-Images").child(imageName);
-                    storageReference.putFile(saveUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(getApplicationContext(), "Fill both fields", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        } else {
 
-                            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            String imageName = UUID.randomUUID().toString();
+                            storageReference = storageReference.child("All-Food-Images").child(imageName);
+                            storageReference.putFile(saveUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
-                                public void onSuccess(Uri uri) {
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                                   // System.out.println("aaaaaaaaaaaa "+uri);
-
-                                     databaseReference = databaseReference.child("Category").child("test");
-                                    databaseReference.addValueEventListener(new ValueEventListener() {
+                                    storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                         @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        public void onSuccess(Uri uri) {
 
-                                                CategoryModel user = new CategoryModel(nameMenu.getText().toString(),uri.toString());
-                                                databaseReference.setValue(user);
-                                                progressBar.setVisibility(View.GONE);
-                                                dialogInterface.dismiss();
+                                            databaseReference = databaseReference.child("Category").push();
+                                            databaseReference.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                                                Toast.makeText(getApplicationContext(), "Menu item added", Toast.LENGTH_SHORT).show();
+                                                    CategoryModel user = new CategoryModel(nameMenu.getText().toString(), uri.toString());
+                                                    databaseReference.setValue(user);
 
-                                        }
+                                                    Toast.makeText(getApplicationContext(), "Menu item added", Toast.LENGTH_SHORT).show();
+                                                    dialog.dismiss();
+                                                    mAlertDialog.dismiss();
+                                                }
 
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+                                                    dialog.dismiss();
+                                                    Toast.makeText(getApplicationContext(), "Failed Sign up", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
 
-                                            Toast.makeText(getApplicationContext(), "Failed Sign up", Toast.LENGTH_SHORT).show();
+
                                         }
                                     });
-
-
-
                                 }
                             });
                         }
-                    });
-                }
 
+                    }
+                });
             }
         });
-
-        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-
-        alertDialog.show();
+        mAlertDialog.show();
 
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -256,7 +262,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,"Select Image"),PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
 
 
     }
@@ -394,5 +400,25 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+
+        if(item.getTitle().equals(SessionManagement.UPDATE)){
+            Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
+        }else{
+
+            deleteCategory(catAdapter.getRef(item.getOrder()).getKey());
+
+        }
+
+        return super.onContextItemSelected(item);
+
+    }
+
+    private void deleteCategory(String key) {
+
+        databaseReference.child("Category").child(key).removeValue();
     }
 }

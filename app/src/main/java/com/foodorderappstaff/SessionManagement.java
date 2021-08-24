@@ -7,6 +7,9 @@ import android.content.SharedPreferences;
 
 public class SessionManagement {
 
+    public static final String UPDATE="UPDATE";
+    public static final String DELETE="DELETE";
+
     public void setUserName(Context con, String number, String name, String login) {
         SharedPreferences.Editor editor = con.getSharedPreferences("userDetails", MODE_PRIVATE).edit();
         editor.putString("phone", number);

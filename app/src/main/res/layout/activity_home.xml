@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Food Categories"
+                android:text="Menu Management"
                 android:textColor="@color/white"
                 android:layout_marginLeft="20dp"
                 android:textSize="20sp"
@@ -111,14 +111,14 @@
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/viewCart"
+            android:id="@+id/addNewMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:backgroundTint="@color/white"
             android:elevation="6dp"
-            android:src="@drawable/ic_baseline_shopping_cart_24"
+            android:src="@drawable/add_new_menu"
             app:backgroundTint="@color/white"
             app:pressedTranslationZ="12dp"
             app:useCompatPadding="true" />

@@ -1,17 +1,25 @@
 package com.foodorderappstaff.all_foods_home;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,13 +29,21 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.foodorderappstaff.R;
 import com.foodorderappstaff.SessionManagement;
 import com.foodorderappstaff.WelcomeActivity;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -37,17 +53,21 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     TextView textView;
     RecyclerView recyclerView;
     EditText searchKeyword;
+    FloatingActionButton addNewMenu;
 
     LinearLayout searchLayout, ll_First, ll_Second, current_status, ll_Third, ll_Fourth, ll_Fifth, ll_Sixth;
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    StorageReference storageReference;
 
     AdapterCategory catAdapter;
-    FloatingActionButton viewCart;
 
     FirebaseRecyclerOptions<CategoryModel> allUserNotes;
     ArrayList<CategoryModel> categoryModelArrayList;
+
+    Uri saveUri;
+    private final int PICK_IMAGE_REQUEST=71;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +77,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         recyclerView = findViewById(R.id.recyclerView);
-        viewCart = findViewById(R.id.viewCart);
+        addNewMenu = findViewById(R.id.addNewMenu);
         searchIcon = findViewById(R.id.searchIcon);
         textView = findViewById(R.id.textView);
         searchLayout = findViewById(R.id.searchLayout);
@@ -69,13 +89,17 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         categoryModelArrayList = new ArrayList<>();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Category");
+        databaseReference = firebaseDatabase.getReference();
+
+        storageReference = FirebaseStorage.getInstance().getReference();
 
 
-        viewCart.setOnClickListener(new View.OnClickListener() {
+        addNewMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //startActivity(new Intent(HomeActivity.this, FoodCartActivity.class));
+
+                showDialogBoxToUploadNewMenu();
+
             }
         });
 
@@ -127,6 +151,115 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    private void showDialogBoxToUploadNewMenu() {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeActivity.this);
+        alertDialog.setTitle("Add New Category");
+        alertDialog.setMessage("Please fill all information");
+
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        View add_menu_layout= inflater.inflate(R.layout.add_new_food_menu_layout,null );
+
+        EditText nameMenu=add_menu_layout.findViewById(R.id.nameMenu);
+        Button btnSelect=add_menu_layout.findViewById(R.id.btnSelect);
+
+        alertDialog.setView(add_menu_layout);
+        alertDialog.setIcon(R.drawable.ic_baseline_shopping_cart_24);
+
+        btnSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chooseImage();
+            }
+        });
+
+        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                if (nameMenu.getText().toString().isEmpty() || saveUri == null) {
+
+                    Toast.makeText(getApplicationContext(), "Fill both fields", Toast.LENGTH_SHORT).show();
+
+                }else{
+                    ProgressBar progressBar = new ProgressBar(getApplicationContext());
+                    progressBar.setVisibility(View.VISIBLE);
+
+                    String imageName= UUID.randomUUID().toString();
+                    storageReference=storageReference.child("All-Food-Images").child(imageName);
+                    storageReference.putFile(saveUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+
+                                   // System.out.println("aaaaaaaaaaaa "+uri);
+
+                                     databaseReference = databaseReference.child("Category").child("test");
+                                    databaseReference.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                                CategoryModel user = new CategoryModel(nameMenu.getText().toString(),uri.toString());
+                                                databaseReference.setValue(user);
+                                                progressBar.setVisibility(View.GONE);
+                                                dialogInterface.dismiss();
+
+                                                Toast.makeText(getApplicationContext(), "Menu item added", Toast.LENGTH_SHORT).show();
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                            Toast.makeText(getApplicationContext(), "Failed Sign up", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+
+
+                                }
+                            });
+                        }
+                    });
+                }
+
+            }
+        });
+
+        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        alertDialog.show();
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) // results of user selection image
+        {
+            saveUri = data.getData();
+        }
+    }
+
+    private void chooseImage() {
+
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,"Select Image"),PICK_IMAGE_REQUEST);
+
+
+    }
 
 
     private void loadData() {
@@ -135,20 +268,20 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
 
-        Query query = databaseReference;
+        Query query = databaseReference.child("Category");
 
         allUserNotes = new FirebaseRecyclerOptions.Builder<CategoryModel>().setQuery(query, CategoryModel.class).build();
         catAdapter = new AdapterCategory(allUserNotes, this);
 
         recyclerView.setAdapter(catAdapter);
         catAdapter.updateOptions(allUserNotes);
-       catAdapter.notifyDataSetChanged();
+        catAdapter.notifyDataSetChanged();
 
     }
 
     private void searchData(String keyword) {
 
-        Query query = databaseReference.orderByChild("name").startAt(keyword).endAt(keyword + "\uf8ff");
+        Query query = databaseReference.child("Category").orderByChild("name").startAt(keyword).endAt(keyword + "\uf8ff");
 
         FirebaseRecyclerOptions<CategoryModel> allUserNotes2 = new FirebaseRecyclerOptions.Builder<CategoryModel>().setQuery(query, CategoryModel.class).build();
         catAdapter = new AdapterCategory(allUserNotes2, this);
@@ -205,13 +338,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.ll_Second:
 
-               // startActivity(new Intent(HomeActivity.this, FoodCartActivity.class));
+                // startActivity(new Intent(HomeActivity.this, FoodCartActivity.class));
                 drawerLayout.closeDrawer(navigationView, true);
                 break;
             case R.id.current_status:
                 drawerLayout.closeDrawer(navigationView, true);
-               // Intent intent2 = new Intent(HomeActivity.this, OrderStatusActivity.class);
-               // startActivity(intent2);
+                // Intent intent2 = new Intent(HomeActivity.this, OrderStatusActivity.class);
+                // startActivity(intent2);
                 break;
             case R.id.ll_Third:
                 showToast("ll_Third");

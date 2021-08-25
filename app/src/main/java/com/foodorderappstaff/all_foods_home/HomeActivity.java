@@ -45,6 +45,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
@@ -59,7 +61,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     LinearLayout searchLayout, ll_First, ll_Second, current_status, ll_Third, ll_Fourth, ll_Fifth, ll_Sixth;
 
-    FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     StorageReference storageReference;
 
@@ -90,17 +91,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         categoryModelArrayList = new ArrayList<>();
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-
-        storageReference = FirebaseStorage.getInstance().getReference();
-
 
         addNewMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                showDialogBoxToUploadNewMenu();
+                showDialogBoxToUploadNewMenu(true, "");
 
             }
         });
@@ -153,7 +149,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void showDialogBoxToUploadNewMenu() {
+    private void showDialogBoxToUploadNewMenu(boolean isNew, String keyId) {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeActivity.this);
         alertDialog.setTitle("Add New Category");
@@ -202,7 +198,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         } else {
 
                             String imageName = UUID.randomUUID().toString();
-                            storageReference = storageReference.child("All-Food-Images").child(imageName);
+                            storageReference = FirebaseStorage.getInstance().getReference().child("All-Food-Images").child(imageName);
                             storageReference.putFile(saveUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -211,26 +207,48 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                                         @Override
                                         public void onSuccess(Uri uri) {
 
-                                            databaseReference = databaseReference.child("Category").push();
-                                            databaseReference.addValueEventListener(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if (isNew == true) {
+                                                databaseReference = FirebaseDatabase.getInstance().getReference().child("Category").push();
+                                                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                                                    CategoryModel user = new CategoryModel(nameMenu.getText().toString(), uri.toString());
-                                                    databaseReference.setValue(user);
+                                                        CategoryModel user = new CategoryModel(nameMenu.getText().toString(), uri.toString());
+                                                        databaseReference.setValue(user);
 
-                                                    Toast.makeText(getApplicationContext(), "Menu item added", Toast.LENGTH_SHORT).show();
-                                                    dialog.dismiss();
-                                                    mAlertDialog.dismiss();
-                                                }
+                                                        Toast.makeText(getApplicationContext(), "Menu item added", Toast.LENGTH_SHORT).show();
+                                                        dialog.dismiss();
+                                                        mAlertDialog.dismiss();
+                                                        saveUri = null;
+                                                    }
 
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError error) {
-                                                    dialog.dismiss();
-                                                    Toast.makeText(getApplicationContext(), "Failed Sign up", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+                                                        dialog.dismiss();
+                                                        Toast.makeText(getApplicationContext(), "Failed Menu item added", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                            } else {
+                                                databaseReference = FirebaseDatabase.getInstance().getReference().child("Category").child(keyId);
 
+                                                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        Map<String, Object> map = new HashMap<>();
+                                                        map.put("name", nameMenu.getText().toString());
+                                                        map.put("image", uri.toString());
+                                                        databaseReference.updateChildren(map);
+                                                        dialog.dismiss();
+                                                        mAlertDialog.dismiss();
+                                                        saveUri = null;
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                    }
+                                                });
+                                            }
 
                                         }
                                     });
@@ -274,7 +292,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
 
-        Query query = databaseReference.child("Category");
+        Query query = FirebaseDatabase.getInstance().getReference().child("Category");
 
         allUserNotes = new FirebaseRecyclerOptions.Builder<CategoryModel>().setQuery(query, CategoryModel.class).build();
         catAdapter = new AdapterCategory(allUserNotes, this);
@@ -287,7 +305,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void searchData(String keyword) {
 
-        Query query = databaseReference.child("Category").orderByChild("name").startAt(keyword).endAt(keyword + "\uf8ff");
+        Query query = FirebaseDatabase.getInstance().getReference().child("Category").orderByChild("name").startAt(keyword).endAt(keyword + "\uf8ff");
 
         FirebaseRecyclerOptions<CategoryModel> allUserNotes2 = new FirebaseRecyclerOptions.Builder<CategoryModel>().setQuery(query, CategoryModel.class).build();
         catAdapter = new AdapterCategory(allUserNotes2, this);
@@ -405,12 +423,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
 
-        if(item.getTitle().equals(SessionManagement.UPDATE)){
-            Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
-        }else{
+        if (item.getTitle().equals(SessionManagement.UPDATE)) {
+            //  Toast.makeText(this, catAdapter.getRef(item.getOrder()).getKey(), Toast.LENGTH_SHORT).show();
 
+            showDialogBoxToUploadNewMenu(false, catAdapter.getRef(item.getOrder()).getKey());
+
+        } else {
             deleteCategory(catAdapter.getRef(item.getOrder()).getKey());
-
         }
 
         return super.onContextItemSelected(item);
@@ -419,6 +438,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void deleteCategory(String key) {
 
-        databaseReference.child("Category").child(key).removeValue();
+        FirebaseDatabase.getInstance().getReference().child("Category").child(key).removeValue();
     }
 }

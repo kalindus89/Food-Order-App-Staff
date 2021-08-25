@@ -1,4 +1,4 @@
-package com.foodorderappstaff.all_foods_home;
+package com.foodorderappstaff.specific_foods_list;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,24 +16,21 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.foodorderappstaff.R;
 import com.foodorderappstaff.SessionManagement;
-import com.foodorderappstaff.specific_foods_list.FoodsListActivity;
 import com.squareup.picasso.Picasso;
 
-public class AdapterCategory extends FirebaseRecyclerAdapter<CategoryModel,AdapterCategory.CatViewHolder>{
+public class FoodsCategoryAdapter extends FirebaseRecyclerAdapter<FoodsModel, FoodsCategoryAdapter.FoodViewHolder> {
 
     Context context;
-    FirebaseRecyclerOptions<CategoryModel> options;
+    FirebaseRecyclerOptions<FoodsModel> options;
 
-    public AdapterCategory(@NonNull FirebaseRecyclerOptions<CategoryModel> options, Context context) {
+    public FoodsCategoryAdapter(@NonNull FirebaseRecyclerOptions<FoodsModel> options, Context context) {
         super(options);
         this.context = context;
         this.options = options;
     }
 
-
     @Override
-    protected void onBindViewHolder(@NonNull CatViewHolder holder, int position, @NonNull CategoryModel model) {
-
+    protected void onBindViewHolder(@NonNull FoodViewHolder holder, int position, @NonNull FoodsModel model) {
 
         holder.itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
@@ -47,38 +44,36 @@ public class AdapterCategory extends FirebaseRecyclerAdapter<CategoryModel,Adapt
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, FoodsListActivity.class);
-                intent.putExtra("cat_id",getRef(holder.getAbsoluteAdapterPosition()).getKey());
-                context.startActivity(intent);
+
+               /* Intent intent = new Intent(context, FoodDetailActivity.class);
+                intent.putExtra("food_id",getRef(holder.getAbsoluteAdapterPosition()).getKey());
+                context.startActivity(intent);*/
+
+
             }
         });
 
-
-        holder.catName.setText(model.getName());
-        Picasso.get().load(model.getImage()).placeholder(R.drawable.loading_image).into(holder.cateImage);
+        holder.foodName.setText(model.getName());
+        Picasso.get().load(model.getImage()).placeholder(R.drawable.loading_image).into(holder.foodImage);
 
     }
-
 
     @NonNull
     @Override
-    public CatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_category_layout,parent,false);
-        return new CatViewHolder(view);
+    public FoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_food_list,parent,false);
+        return new FoodViewHolder(view);
     }
 
+    public class FoodViewHolder extends RecyclerView.ViewHolder {
+        private TextView foodName;
+        private ImageView foodImage;
 
-    public class CatViewHolder extends RecyclerView.ViewHolder {
-        private TextView catName;
-        private ImageView cateImage;
-
-        public CatViewHolder(@NonNull View itemView) {
+        public FoodViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            cateImage =itemView.findViewById(R.id.cateImage);
-            catName = itemView.findViewById(R.id.catName);
+            foodImage =itemView.findViewById(R.id.foodImage);
+            foodName = itemView.findViewById(R.id.foodName);
         }
     }
-
-
 }

@@ -24,6 +24,9 @@
         <activity
             android:name=".all_foods_home.HomeActivity"
             android:exported="true" />
+        <activity
+            android:name=".specific_foods_list.FoodsListActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

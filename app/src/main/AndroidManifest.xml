@@ -27,6 +27,9 @@
         <activity
             android:name=".specific_foods_list.FoodsListActivity"
             android:exported="true" />
+        <activity
+            android:name=".order_status.OrderStatusActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

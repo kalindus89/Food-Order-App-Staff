@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/my_bg"
-    tools:context=".order_status.OrderStatusActivity">
+    tools:context=".all_order_status.AllOrderStatusActivity">
 
     <LinearLayout
         android:id="@+id/topLayout"

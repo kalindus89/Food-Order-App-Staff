@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +30,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.foodorderappstaff.R;
 import com.foodorderappstaff.SessionManagement;
 import com.foodorderappstaff.WelcomeActivity;
-import com.foodorderappstaff.order_status.OrderStatusActivity;
+import com.foodorderappstaff.all_order_status.AllOrderStatusActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -368,7 +367,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.current_status:
                 drawerLayout.closeDrawer(navigationView, true);
-                 Intent intent2 = new Intent(HomeActivity.this, OrderStatusActivity.class);
+                 Intent intent2 = new Intent(HomeActivity.this, AllOrderStatusActivity.class);
                  startActivity(intent2);
                 break;
             case R.id.ll_Third:

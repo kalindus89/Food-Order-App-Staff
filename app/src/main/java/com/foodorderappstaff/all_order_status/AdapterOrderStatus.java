@@ -1,6 +1,7 @@
-package com.foodorderappstaff.order_status;
+package com.foodorderappstaff.all_order_status;
 
 import android.content.Context;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.foodorderappstaff.R;
+import com.foodorderappstaff.SessionManagement;
 
 public class AdapterOrderStatus extends FirebaseRecyclerAdapter<OrderPlacedModel, AdapterOrderStatus.OderStatusViewHolder> {
 
@@ -27,7 +29,15 @@ public class AdapterOrderStatus extends FirebaseRecyclerAdapter<OrderPlacedModel
     @Override
     protected void onBindViewHolder(@NonNull OderStatusViewHolder holder, int position, @NonNull OrderPlacedModel model) {
 
+        holder.itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override
+            public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+                contextMenu.setHeaderTitle("Select the action");
+                contextMenu.add(0,0,holder.getAbsoluteAdapterPosition(), SessionManagement.UPDATE);
+                contextMenu.add(0,0,holder.getAbsoluteAdapterPosition(), SessionManagement.DELETE);
 
+            }
+        });
         holder.order_id.setText("Oder ID: "+options.getSnapshots().getSnapshot(position).getKey());
 
         if(model.getStatus().equals("1")){

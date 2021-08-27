@@ -1,4 +1,4 @@
-package com.foodorderappstaff.order_status;
+package com.foodorderappstaff.all_order_status;
 
 import java.util.List;
 
@@ -8,7 +8,6 @@ public class OrderPlacedModel {
     String phone;
     String address;
     String total;
-    List<String> ordersList;
    String status;
     public OrderPlacedModel() {
     }
@@ -18,7 +17,6 @@ public class OrderPlacedModel {
         this.phone = phone;
         this.address = address;
         this.total = total;
-        this.ordersList = ordersList;
         status="0";  // 0=placed, 1=shipping, 2=shipped
     }
 
@@ -28,14 +26,6 @@ public class OrderPlacedModel {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public List<String>  getOrdersList() {
-        return ordersList;
-    }
-
-    public void setOrdersList(List<String>  ordersList) {
-        this.ordersList = ordersList;
     }
 
     public String getName() {

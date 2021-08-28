@@ -26,6 +26,7 @@ import com.foodorderappstaff.all_foods_home.HomeActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -47,7 +48,7 @@ public class AllOrderStatusActivity extends AppCompatActivity {
     AdapterOrderStatus adapterOrderStatus;
 
     MaterialSpinner materialSpinner;
-
+    FirebaseRecyclerOptions<OrderPlacedModel> allUserNotes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +71,7 @@ public class AllOrderStatusActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
 
         Query query = FirebaseDatabase.getInstance().getReference("PlaceOrders");
-        FirebaseRecyclerOptions<OrderPlacedModel> allUserNotes  = new FirebaseRecyclerOptions.Builder<OrderPlacedModel>().setQuery(query, OrderPlacedModel.class).build();
+        allUserNotes   = new FirebaseRecyclerOptions.Builder<OrderPlacedModel>().setQuery(query, OrderPlacedModel.class).build();
         adapterOrderStatus  = new AdapterOrderStatus(allUserNotes,getApplicationContext());
         recyclerView.setAdapter(adapterOrderStatus);
         adapterOrderStatus.notifyDataSetChanged();
@@ -101,6 +102,7 @@ public class AllOrderStatusActivity extends AppCompatActivity {
 
         if (item.getTitle().equals(SessionManagement.UPDATE)) {
             //  Toast.makeText(this, catAdapter.getRef(item.getOrder()).getKey(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, allUserNotes.getSnapshots().get(item.getOrder()).getAddress(), Toast.LENGTH_SHORT).show();
 
             getDriverOrder(adapterOrderStatus.getRef(item.getOrder()).getKey());
 
@@ -113,6 +115,9 @@ public class AllOrderStatusActivity extends AppCompatActivity {
     }
 
     private void getDriverOrder( String key) {
+
+
+
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(AllOrderStatusActivity.this);
         alertDialog.setTitle("Update Order");
@@ -138,6 +143,23 @@ public class AllOrderStatusActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(View view) {
+
+                        DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child("OrderStatus").child(new SessionManagement().getPhone(getApplicationContext())).child("Ongoing").child(key);
+                        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                               /* OrderPlacedModel user = new OrderPlacedModel(new SessionManagement().getName(getApplicationContext()),
+                                        new SessionManagement().getPhone(getApplicationContext()), editText.getText().toString(),
+                                        totalAmountTxt.getText().toString());
+                                databaseReference.setValue(user);*/
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
 
                     }
                 });

@@ -12,7 +12,7 @@ public class OrderPlacedModel {
     public OrderPlacedModel() {
     }
 
-    public OrderPlacedModel(String name, String phone, String address, String total, List<String>  ordersList) {
+    public OrderPlacedModel(String name, String phone, String address, String total) {
         this.name = name;
         this.phone = phone;
         this.address = address;

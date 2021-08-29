@@ -30,6 +30,9 @@
         <activity
             android:name=".all_order_status.AllOrderStatusActivity"
             android:exported="true" />
+        <activity
+            android:name=".all_order_status.CurrentJobOrdersActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

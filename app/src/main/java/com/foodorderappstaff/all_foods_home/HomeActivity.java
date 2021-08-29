@@ -31,6 +31,7 @@ import com.foodorderappstaff.R;
 import com.foodorderappstaff.SessionManagement;
 import com.foodorderappstaff.WelcomeActivity;
 import com.foodorderappstaff.all_order_status.AllOrderStatusActivity;
+import com.foodorderappstaff.all_order_status.CurrentJobOrdersActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -362,7 +363,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.ll_Second:
 
-                // startActivity(new Intent(HomeActivity.this, FoodCartActivity.class));
+                Intent intent = new Intent(HomeActivity.this, CurrentJobOrdersActivity.class);
+                startActivity(intent);
                 drawerLayout.closeDrawer(navigationView, true);
                 break;
             case R.id.current_status:
@@ -388,8 +390,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
                 new SessionManagement().setUserName(this, "no number", "no name", "log out");
 
-                Intent intent = new Intent(HomeActivity.this, WelcomeActivity.class);
-                startActivity(intent);
+                Intent intent6 = new Intent(HomeActivity.this, WelcomeActivity.class);
+                startActivity(intent6);
                 finish();
                 break;
             default:

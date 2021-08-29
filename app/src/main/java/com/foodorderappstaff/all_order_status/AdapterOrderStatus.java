@@ -1,6 +1,7 @@
 package com.foodorderappstaff.all_order_status;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,11 +42,14 @@ public class AdapterOrderStatus extends FirebaseRecyclerAdapter<OrderPlacedModel
         holder.order_id.setText("Oder ID: "+options.getSnapshots().getSnapshot(position).getKey());
 
         if(model.getStatus().equals("1")){
-            holder.order_status.setText("Status: Shipping");
+            holder.order_status.setText("Status: Order Placed");
+            holder.order_status.setTextColor(Color.parseColor("#54BF2D"));
         }else if(model.getStatus().equals("2")){
-            holder.order_status.setText("Status: Shipped");
+            holder.order_status.setText("Status: Shipping");
+            holder.order_status.setTextColor(Color.parseColor("#F32183"));
         }else{
-            holder.order_status.setText("Status: Placed");
+            holder.order_status.setText("Status: Completed");
+            holder.order_status.setTextColor(Color.parseColor("#2196F3"));
         }
 
         holder.order_total.setText("Total: $"+model.getTotal());
@@ -72,4 +76,6 @@ public class AdapterOrderStatus extends FirebaseRecyclerAdapter<OrderPlacedModel
             order_address =itemView.findViewById(R.id.order_address);
         }
     }
+
+
 }

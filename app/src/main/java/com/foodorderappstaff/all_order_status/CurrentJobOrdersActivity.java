@@ -2,7 +2,6 @@ package com.foodorderappstaff.all_order_status;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -21,9 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.foodorderappstaff.R;
 import com.foodorderappstaff.SessionManagement;
-import com.foodorderappstaff.all_foods_home.CategoryModel;
-import com.foodorderappstaff.all_foods_home.HomeActivity;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,17 +27,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.UploadTask;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
-public class AllOrderStatusActivity extends AppCompatActivity {
+public class CurrentJobOrdersActivity extends AppCompatActivity {
 
 
     ImageView goBack;
@@ -50,7 +40,7 @@ public class AllOrderStatusActivity extends AppCompatActivity {
     AdapterOrderStatus adapterOrderStatus;
 
     MaterialSpinner materialSpinner;
-    String selectStatus="";
+    String selectStatus="0";
     FirebaseRecyclerOptions<OrderPlacedModel> allUserNotes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +63,7 @@ public class AllOrderStatusActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
 
-        Query query = FirebaseDatabase.getInstance().getReference("PlaceOrders");
+        Query query = FirebaseDatabase.getInstance().getReference("OrderStatus").child(new SessionManagement().getPhone(this)).child("Ongoing");
         allUserNotes   = new FirebaseRecyclerOptions.Builder<OrderPlacedModel>().setQuery(query, OrderPlacedModel.class).build();
         adapterOrderStatus  = new AdapterOrderStatus(allUserNotes,getApplicationContext());
         recyclerView.setAdapter(adapterOrderStatus);
@@ -104,9 +94,6 @@ public class AllOrderStatusActivity extends AppCompatActivity {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
 
         if (item.getTitle().equals(SessionManagement.UPDATE)) {
-            //  Toast.makeText(this, catAdapter.getRef(item.getOrder()).getKey(), Toast.LENGTH_SHORT).show();
-          //  Toast.makeText(this, allUserNotes.getSnapshots().get(item.getOrder()).getAddress(), Toast.LENGTH_SHORT).show();
-          //  Toast.makeText(this, String.valueOf(allUserNotes.getSnapshots().size()), Toast.LENGTH_SHORT).show();
 
           getDriverOrder(item);
 
@@ -120,7 +107,7 @@ public class AllOrderStatusActivity extends AppCompatActivity {
 
     private void getDriverOrder(MenuItem item) {
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(AllOrderStatusActivity.this);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(CurrentJobOrdersActivity.this);
         alertDialog.setTitle("Update Order");
         alertDialog.setMessage("Please choose status");
         alertDialog.setPositiveButton("Update", null);
@@ -130,7 +117,7 @@ public class AllOrderStatusActivity extends AppCompatActivity {
         View view =inflater.inflate(R.layout.spinner_order_update,null);
 
         materialSpinner = (MaterialSpinner)view.findViewById(R.id.materialSpinner);
-        materialSpinner.setItems("--Select--","Get Order");
+        materialSpinner.setItems("--Select--","On my way","Completed");
         alertDialog.setView(view);
 
 
@@ -138,8 +125,10 @@ public class AllOrderStatusActivity extends AppCompatActivity {
 
             @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
 
-                if(item.equals("Get Order")){
-                    selectStatus="1";
+                if(item.equals("On my way")){
+                    selectStatus="2";
+                }else if(item.equals("Completed")){
+                    selectStatus="3";
                 }else {
                     selectStatus="0";
                 }
@@ -160,34 +149,47 @@ public class AllOrderStatusActivity extends AppCompatActivity {
 
                         if (!selectStatus.isEmpty() && !selectStatus.equals("0")) {
 
-                            ProgressDialog dialog = ProgressDialog.show(AllOrderStatusActivity.this, "",
+                            ProgressDialog dialog = ProgressDialog.show(CurrentJobOrdersActivity.this, "",
                                     "Placing Order. Please wait...", true);
                             dialog.show();
 
-                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("OrderStatus").child(new SessionManagement().getPhone(getApplicationContext())).child("Ongoing").child(adapterOrderStatus.getRef(item.getOrder()).getKey());
-                            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(selectStatus.equals("3")) {
+                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("OrderStatus").child(new SessionManagement().getPhone(getApplicationContext())).child("Completed").child(adapterOrderStatus.getRef(item.getOrder()).getKey());
+                                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                                    OrderPlacedModel user = new OrderPlacedModel(allUserNotes.getSnapshots().get(item.getOrder()).getName(),
-                                            allUserNotes.getSnapshots().get(item.getOrder()).getPhone(), allUserNotes.getSnapshots().get(item.getOrder()).getAddress(),
-                                            allUserNotes.getSnapshots().get(item.getOrder()).getTotal());
-                                    user.setStatus(selectStatus);
-                                    databaseReference.setValue(user);
+                                        OrderPlacedModel user = new OrderPlacedModel(allUserNotes.getSnapshots().get(item.getOrder()).getName(),
+                                                allUserNotes.getSnapshots().get(item.getOrder()).getPhone(), allUserNotes.getSnapshots().get(item.getOrder()).getAddress(),
+                                                allUserNotes.getSnapshots().get(item.getOrder()).getTotal());
+                                        user.setStatus(selectStatus);
+                                        databaseReference.setValue(user);
 
-                                    FirebaseFirestore.getInstance().document("FoodOrders/"+allUserNotes.getSnapshots().get(item.getOrder()).getPhone()+"/orderFoods/00000orderHistory/ongoingOrderIds/"+adapterOrderStatus.getRef(item.getOrder()).getKey()).update("status",selectStatus);
+                                        FirebaseFirestore.getInstance().document("FoodOrders/" + allUserNotes.getSnapshots().get(item.getOrder()).getPhone() + "/orderFoods/00000orderHistory/ongoingOrderIds/" + adapterOrderStatus.getRef(item.getOrder()).getKey()).delete();
+                                        FirebaseFirestore.getInstance().document("FoodOrders/" + allUserNotes.getSnapshots().get(item.getOrder()).getPhone() + "/orderFoods/00000orderHistory/ongoingOrderIds/0000allOrders/placedOrderIds/" + adapterOrderStatus.getRef(item.getOrder()).getKey()).update("status", selectStatus);
 
-                                    FirebaseDatabase.getInstance().getReference().child("PlaceOrders").child(adapterOrderStatus.getRef(item.getOrder()).getKey()).removeValue();
+                                        FirebaseDatabase.getInstance().getReference().child("OrderStatus").child(new SessionManagement().getPhone(getApplicationContext())).child("Ongoing").child(adapterOrderStatus.getRef(item.getOrder()).getKey()).removeValue();
 
-                                    dialog.dismiss();
-                                    mAlertDialog.dismiss();
-                                }
+                                        dialog.dismiss();
+                                        mAlertDialog.dismiss();
+                                    }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
 
-                                }
-                            });
+                                    }
+                                });
+                            }else{
+
+                                Map note = new HashMap();
+                                note.put("status",selectStatus);
+                                FirebaseDatabase.getInstance().getReference().child("OrderStatus").child(new SessionManagement().getPhone(getApplicationContext())).child("Ongoing").child(adapterOrderStatus.getRef(item.getOrder()).getKey()).updateChildren(note);
+
+                                FirebaseFirestore.getInstance().document("FoodOrders/" + allUserNotes.getSnapshots().get(item.getOrder()).getPhone() + "/orderFoods/00000orderHistory/ongoingOrderIds/" + adapterOrderStatus.getRef(item.getOrder()).getKey()).update("status", selectStatus);
+
+                                dialog.dismiss();
+                                mAlertDialog.dismiss();
+                            }
 
                         }
                         else{

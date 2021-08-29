@@ -37,7 +37,7 @@ public class MyFirebaseIdService extends FirebaseMessagingService {
 
                        // Toast.makeText(getApplicationContext(), refreshToken, Toast.LENGTH_SHORT).show();
 
-                        FirebaseFirestore.getInstance().document("FoodOrders/0777171342").update("messagingToken", refreshToken);
+                        FirebaseFirestore.getInstance().document("FoodOrders/94777171342").update("messagingToken", refreshToken);
 
                     }
                 });

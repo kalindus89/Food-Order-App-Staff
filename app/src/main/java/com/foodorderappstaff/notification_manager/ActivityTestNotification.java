@@ -45,7 +45,7 @@ public class ActivityTestNotification extends AppCompatActivity {
             public void onClick(View view) {
 
               //  Snackbar.make(view,"this is test text",Snackbar.LENGTH_SHORT).show();
-                DocumentReference nycRef = FirebaseFirestore.getInstance().collection("FoodOrders").document("94777171342");
+                DocumentReference nycRef = FirebaseFirestore.getInstance().collection("FoodOrders").document("0777171342");
 
                 nycRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -83,7 +83,7 @@ public class ActivityTestNotification extends AppCompatActivity {
 
                        // Toast.makeText(getApplicationContext(), refreshToken, Toast.LENGTH_SHORT).show();
 
-                        FirebaseFirestore.getInstance().document("FoodOrders/0777171342").update("messagingToken", refreshToken);
+                        FirebaseFirestore.getInstance().document("FoodOrders/94777171342").update("messagingToken", refreshToken);
 
                     }
                 });
@@ -99,7 +99,6 @@ public class ActivityTestNotification extends AppCompatActivity {
             public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                 if (response.code() == 200) {
 
-                    Toast.makeText(getApplicationContext(), "111111 "+response.body().success, Toast.LENGTH_LONG).show();
                     if (response.body().success != 1) {
                         Toast.makeText(getApplicationContext(), "Failed ", Toast.LENGTH_LONG).show();
                     }

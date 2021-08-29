@@ -31,6 +31,7 @@ import com.foodorderappstaff.R;
 import com.foodorderappstaff.SessionManagement;
 import com.foodorderappstaff.WelcomeActivity;
 import com.foodorderappstaff.all_order_status.AllOrderStatusActivity;
+import com.foodorderappstaff.all_order_status.CompletedJobOrdersActivity;
 import com.foodorderappstaff.all_order_status.CurrentJobOrdersActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -375,6 +376,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ll_Third:
                 showToast("ll_Third");
                 drawerLayout.closeDrawer(navigationView, true);
+                Intent intent3 = new Intent(HomeActivity.this, CompletedJobOrdersActivity.class);
+                startActivity(intent3);
                 break;
             case R.id.ll_Fourth:
                 showToast("ll_Fourth");

@@ -45,7 +45,7 @@ public class ActivityTestNotification extends AppCompatActivity {
             public void onClick(View view) {
 
               //  Snackbar.make(view,"this is test text",Snackbar.LENGTH_SHORT).show();
-                DocumentReference nycRef = FirebaseFirestore.getInstance().collection("FoodOrders").document("0777171342");
+                DocumentReference nycRef = FirebaseFirestore.getInstance().collection("FoodOrders").document("94777171342");
 
                 nycRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -65,9 +65,9 @@ public class ActivityTestNotification extends AppCompatActivity {
             }
         });
 
-        updateFirebaseToken();
+      //  updateFirebaseToken();
     }
-    private void updateFirebaseToken() {
+  /*  private void updateFirebaseToken() {
 
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
@@ -88,13 +88,13 @@ public class ActivityTestNotification extends AppCompatActivity {
                     }
                 });
 
-    }
+    }*/
 
     public void sendNotifications(String usertoken, String title, String message) {
         Data data = new Data(title, message);
         NotificationSender sender = new NotificationSender(data, usertoken);
-        Toast.makeText(getApplicationContext(), "111111 ", Toast.LENGTH_LONG).show();
-        apiService.sendNotifcation(sender).enqueue(new Callback<MyResponse>() {
+      //  Toast.makeText(getApplicationContext(), "111111 ", Toast.LENGTH_LONG).show();
+        apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
             @Override
             public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                 if (response.code() == 200) {

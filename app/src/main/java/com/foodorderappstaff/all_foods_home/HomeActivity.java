@@ -34,6 +34,7 @@ import com.foodorderappstaff.all_order_status.AllOrderStatusActivity;
 import com.foodorderappstaff.all_order_status.CompletedJobOrdersActivity;
 import com.foodorderappstaff.all_order_status.CurrentJobOrdersActivity;
 import com.foodorderappstaff.notification_manager.ActivityTestNotification;
+import com.foodorderappstaff.notification_manager.ListenAllOrdersService;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -149,6 +150,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         loadData();
+
+        //register service to get New notifications
+        Intent service = new Intent(HomeActivity.this, ListenAllOrdersService.class);
+        startService(service);
 
     }
 

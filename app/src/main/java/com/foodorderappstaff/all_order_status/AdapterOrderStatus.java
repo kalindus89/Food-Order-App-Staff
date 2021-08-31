@@ -47,6 +47,9 @@ public class AdapterOrderStatus extends FirebaseRecyclerAdapter<OrderPlacedModel
         }else if(model.getStatus().equals("2")){
             holder.order_status.setText("Status: Shipping");
             holder.order_status.setTextColor(Color.parseColor("#F32183"));
+        }else if(model.getStatus().equals("0")){
+            holder.order_status.setText("Status: Waiting..");
+            holder.order_status.setTextColor(Color.parseColor("#0C6C3A"));
         }else{
             holder.order_status.setText("Status: Completed");
             holder.order_status.setTextColor(Color.parseColor("#2196F3"));

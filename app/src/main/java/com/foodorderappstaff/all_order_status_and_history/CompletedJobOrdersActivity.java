@@ -23,6 +23,7 @@ public class CompletedJobOrdersActivity extends AppCompatActivity {
     AdapterOrderStatus adapterOrderStatus;
 
     FirebaseRecyclerOptions<OrderPlacedModel> allUserNotes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,17 +37,23 @@ public class CompletedJobOrdersActivity extends AppCompatActivity {
         goBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if (adapterOrderStatus != null) {
+                    adapterOrderStatus.stopListening();
+                }
                 finish();
             }
         });
 
-        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
 
-        Query query = FirebaseDatabase.getInstance().getReference("OrderStatus").child(new SessionManagement().getPhone(this)).child("Completed");
-        allUserNotes   = new FirebaseRecyclerOptions.Builder<OrderPlacedModel>().setQuery(query, OrderPlacedModel.class).build();
-        adapterOrderStatus  = new AdapterOrderStatus(allUserNotes,this);
+        Query query = FirebaseDatabase.getInstance().getReference("OrderStatus").child(new SessionManagement().getPhone(this)).child("Completed").limitToFirst(10);
+        allUserNotes = new FirebaseRecyclerOptions.Builder<OrderPlacedModel>().setQuery(query, OrderPlacedModel.class).build();
+        adapterOrderStatus = new AdapterOrderStatus(allUserNotes, this);
         recyclerView.setAdapter(adapterOrderStatus);
         adapterOrderStatus.notifyDataSetChanged();
 
@@ -57,12 +64,6 @@ public class CompletedJobOrdersActivity extends AppCompatActivity {
         super.onStart();
         adapterOrderStatus.startListening();
         recyclerView.setAdapter(adapterOrderStatus);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        adapterOrderStatus.stopListening();
     }
 
 

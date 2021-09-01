@@ -1,17 +1,10 @@
-package com.foodorderappstaff.all_order_status;
+package com.foodorderappstaff.all_order_status_and_history;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,18 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.foodorderappstaff.R;
 import com.foodorderappstaff.SessionManagement;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.jaredrummler.materialspinner.MaterialSpinner;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class CompletedJobOrdersActivity extends AppCompatActivity {
 
@@ -63,7 +46,7 @@ public class CompletedJobOrdersActivity extends AppCompatActivity {
 
         Query query = FirebaseDatabase.getInstance().getReference("OrderStatus").child(new SessionManagement().getPhone(this)).child("Completed");
         allUserNotes   = new FirebaseRecyclerOptions.Builder<OrderPlacedModel>().setQuery(query, OrderPlacedModel.class).build();
-        adapterOrderStatus  = new AdapterOrderStatus(allUserNotes,getApplicationContext());
+        adapterOrderStatus  = new AdapterOrderStatus(allUserNotes,this);
         recyclerView.setAdapter(adapterOrderStatus);
         adapterOrderStatus.notifyDataSetChanged();
 
@@ -81,14 +64,6 @@ public class CompletedJobOrdersActivity extends AppCompatActivity {
         super.onStop();
         adapterOrderStatus.stopListening();
     }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-
 
 
 }

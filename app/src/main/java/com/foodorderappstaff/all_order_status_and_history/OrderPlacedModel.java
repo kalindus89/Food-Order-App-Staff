@@ -1,6 +1,4 @@
-package com.foodorderappstaff.all_order_status;
-
-import java.util.List;
+package com.foodorderappstaff.all_order_status_and_history;
 
 public class OrderPlacedModel {
 

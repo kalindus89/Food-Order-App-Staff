@@ -34,13 +34,16 @@
             android:name=".specific_foods_list.FoodsListActivity"
             android:exported="true" />
         <activity
-            android:name=".all_order_status.AllOrderStatusActivity"
+            android:name=".all_order_status_and_history.AllOrderStatusActivity"
             android:exported="true" />
         <activity
-            android:name=".all_order_status.CurrentJobOrdersActivity"
+            android:name=".all_order_status_and_history.CurrentJobOrdersActivity"
             android:exported="true" />
         <activity
-            android:name=".all_order_status.CompletedJobOrdersActivity"
+            android:name=".all_order_status_and_history.CompletedJobOrdersActivity"
+            android:exported="true" />
+        <activity
+            android:name=".view_order_foods.ViewOrderFoods"
             android:exported="true" />
 
         <service

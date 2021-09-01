@@ -18,15 +18,13 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.foodorderappstaff.R;
-import com.foodorderappstaff.all_order_status.AllOrderStatusActivity;
-import com.foodorderappstaff.all_order_status.OrderPlacedModel;
+import com.foodorderappstaff.all_order_status_and_history.AllOrderStatusActivity;
+import com.foodorderappstaff.all_order_status_and_history.OrderPlacedModel;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import okhttp3.Request;
 
 public class ListenAllOrdersService extends Service implements ChildEventListener {
 

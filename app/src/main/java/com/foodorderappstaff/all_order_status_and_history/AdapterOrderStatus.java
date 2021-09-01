@@ -1,6 +1,7 @@
-package com.foodorderappstaff.all_order_status;
+package com.foodorderappstaff.all_order_status_and_history;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.foodorderappstaff.R;
 import com.foodorderappstaff.SessionManagement;
+import com.foodorderappstaff.view_order_foods.ViewOrderFoods;
 
 public class AdapterOrderStatus extends FirebaseRecyclerAdapter<OrderPlacedModel, AdapterOrderStatus.OderStatusViewHolder> {
 
@@ -39,6 +41,23 @@ public class AdapterOrderStatus extends FirebaseRecyclerAdapter<OrderPlacedModel
 
             }
         });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(context, ViewOrderFoods.class);
+                intent.putExtra("order_id",options.getSnapshots().getSnapshot(holder.getAbsoluteAdapterPosition()).getKey());
+                intent.putExtra("order_status",model.getStatus());
+                intent.putExtra("order_total",model.getTotal());
+                intent.putExtra("order_address",model.getAddress());
+                intent.putExtra("user_number",model.getPhone());
+                context.startActivity(intent);
+
+
+            }
+        });
+
         holder.order_id.setText("Oder ID: "+options.getSnapshots().getSnapshot(position).getKey());
 
         if(model.getStatus().equals("1")){

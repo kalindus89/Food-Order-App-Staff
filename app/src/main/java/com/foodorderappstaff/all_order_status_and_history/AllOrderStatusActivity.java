@@ -1,4 +1,4 @@
-package com.foodorderappstaff.all_order_status;
+package com.foodorderappstaff.all_order_status_and_history;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -39,14 +39,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CurrentJobOrdersActivity extends AppCompatActivity {
+public class AllOrderStatusActivity extends AppCompatActivity {
 
 
     ImageView goBack;
@@ -54,7 +51,7 @@ public class CurrentJobOrdersActivity extends AppCompatActivity {
     AdapterOrderStatus adapterOrderStatus;
 
     MaterialSpinner materialSpinner;
-    String selectStatus="0";
+    String selectStatus="";
     FirebaseRecyclerOptions<OrderPlacedModel> allUserNotes;
     APIService apiService;
 
@@ -79,7 +76,7 @@ public class CurrentJobOrdersActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
 
-        Query query = FirebaseDatabase.getInstance().getReference("OrderStatus").child(new SessionManagement().getPhone(this)).child("Ongoing");
+        Query query = FirebaseDatabase.getInstance().getReference("PlaceOrders");
         allUserNotes   = new FirebaseRecyclerOptions.Builder<OrderPlacedModel>().setQuery(query, OrderPlacedModel.class).build();
         adapterOrderStatus  = new AdapterOrderStatus(allUserNotes,getApplicationContext());
         recyclerView.setAdapter(adapterOrderStatus);
@@ -110,6 +107,9 @@ public class CurrentJobOrdersActivity extends AppCompatActivity {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
 
         if (item.getTitle().equals(SessionManagement.UPDATE)) {
+            //  Toast.makeText(this, catAdapter.getRef(item.getOrder()).getKey(), Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(this, allUserNotes.getSnapshots().get(item.getOrder()).getAddress(), Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(this, String.valueOf(allUserNotes.getSnapshots().size()), Toast.LENGTH_SHORT).show();
 
           getDriverOrder(item);
 
@@ -123,7 +123,7 @@ public class CurrentJobOrdersActivity extends AppCompatActivity {
 
     private void getDriverOrder(MenuItem item) {
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(CurrentJobOrdersActivity.this);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(AllOrderStatusActivity.this);
         alertDialog.setTitle("Update Order");
         alertDialog.setMessage("Please choose status");
         alertDialog.setPositiveButton("Update", null);
@@ -133,7 +133,7 @@ public class CurrentJobOrdersActivity extends AppCompatActivity {
         View view =inflater.inflate(R.layout.spinner_order_update,null);
 
         materialSpinner = (MaterialSpinner)view.findViewById(R.id.materialSpinner);
-        materialSpinner.setItems("--Select--","On my way","Completed");
+        materialSpinner.setItems("--Select--","Get Order");
         alertDialog.setView(view);
 
 
@@ -141,10 +141,8 @@ public class CurrentJobOrdersActivity extends AppCompatActivity {
 
             @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
 
-                if(item.equals("On my way")){
-                    selectStatus="2";
-                }else if(item.equals("Completed")){
-                    selectStatus="3";
+                if(item.equals("Get Order")){
+                    selectStatus="1";
                 }else {
                     selectStatus="0";
                 }
@@ -165,51 +163,37 @@ public class CurrentJobOrdersActivity extends AppCompatActivity {
 
                         if (!selectStatus.isEmpty() && !selectStatus.equals("0")) {
 
-                            ProgressDialog dialog = ProgressDialog.show(CurrentJobOrdersActivity.this, "",
+                            ProgressDialog dialog = ProgressDialog.show(AllOrderStatusActivity.this, "",
                                     "Placing Order. Please wait...", true);
                             dialog.show();
 
-                            if(selectStatus.equals("3")) {
-                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("OrderStatus").child(new SessionManagement().getPhone(getApplicationContext())).child("Completed").child(adapterOrderStatus.getRef(item.getOrder()).getKey());
-                                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("OrderStatus").child(new SessionManagement().getPhone(getApplicationContext())).child("Ongoing").child(adapterOrderStatus.getRef(item.getOrder()).getKey());
+                            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                                        OrderPlacedModel user = new OrderPlacedModel(allUserNotes.getSnapshots().get(item.getOrder()).getName(),
-                                                allUserNotes.getSnapshots().get(item.getOrder()).getPhone(), allUserNotes.getSnapshots().get(item.getOrder()).getAddress(),
-                                                allUserNotes.getSnapshots().get(item.getOrder()).getTotal());
-                                        user.setStatus(selectStatus);
-                                        databaseReference.setValue(user);
+                                    OrderPlacedModel user = new OrderPlacedModel(allUserNotes.getSnapshots().get(item.getOrder()).getName(),
+                                            allUserNotes.getSnapshots().get(item.getOrder()).getPhone(), allUserNotes.getSnapshots().get(item.getOrder()).getAddress(),
+                                            allUserNotes.getSnapshots().get(item.getOrder()).getTotal());
+                                    user.setStatus(selectStatus);
+                                    databaseReference.setValue(user);
 
-                                        notifyCustomer(allUserNotes.getSnapshots().get(item.getOrder()).getPhone(),adapterOrderStatus.getRef(item.getOrder()).getKey(),"Your food has arrived");
+                                    notifyCustomer(allUserNotes.getSnapshots().get(item.getOrder()).getPhone(),adapterOrderStatus.getRef(item.getOrder()).getKey());
 
-                                        FirebaseFirestore.getInstance().document("FoodOrders/" + allUserNotes.getSnapshots().get(item.getOrder()).getPhone() + "/orderFoods/00000orderHistory/ongoingOrderIds/" + adapterOrderStatus.getRef(item.getOrder()).getKey()).delete();
-                                        FirebaseFirestore.getInstance().document("FoodOrders/" + allUserNotes.getSnapshots().get(item.getOrder()).getPhone() + "/orderFoods/00000orderHistory/ongoingOrderIds/0000allOrders/placedOrderIds/" + adapterOrderStatus.getRef(item.getOrder()).getKey()).update("status", selectStatus);
+                                    FirebaseFirestore.getInstance().document("FoodOrders/"+allUserNotes.getSnapshots().get(item.getOrder()).getPhone()+"/orderFoods/00000orderHistory/ongoingOrderIds/"+adapterOrderStatus.getRef(item.getOrder()).getKey()).update("status",selectStatus);
 
-                                        FirebaseDatabase.getInstance().getReference().child("OrderStatus").child(new SessionManagement().getPhone(getApplicationContext())).child("Ongoing").child(adapterOrderStatus.getRef(item.getOrder()).getKey()).removeValue();
+                                    FirebaseDatabase.getInstance().getReference().child("PlaceOrders").child(adapterOrderStatus.getRef(item.getOrder()).getKey()).removeValue();
 
-                                        dialog.dismiss();
-                                        mAlertDialog.dismiss();
-                                    }
+                                    dialog.dismiss();
+                                    mAlertDialog.dismiss();
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
+                                }
 
-                                    }
-                                });
-                            }else{
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-                                Map note = new HashMap();
-                                note.put("status",selectStatus);
-                                FirebaseDatabase.getInstance().getReference().child("OrderStatus").child(new SessionManagement().getPhone(getApplicationContext())).child("Ongoing").child(adapterOrderStatus.getRef(item.getOrder()).getKey()).updateChildren(note);
-
-                                FirebaseFirestore.getInstance().document("FoodOrders/" + allUserNotes.getSnapshots().get(item.getOrder()).getPhone() + "/orderFoods/00000orderHistory/ongoingOrderIds/" + adapterOrderStatus.getRef(item.getOrder()).getKey()).update("status", selectStatus);
-
-                                notifyCustomer(allUserNotes.getSnapshots().get(item.getOrder()).getPhone(),adapterOrderStatus.getRef(item.getOrder()).getKey(),"Your food is now on the way");
-
-                                dialog.dismiss();
-                                mAlertDialog.dismiss();
-                            }
+                                }
+                            });
 
                         }
                         else{
@@ -232,7 +216,7 @@ public class CurrentJobOrdersActivity extends AppCompatActivity {
 
     }
 
-    private void notifyCustomer(String phoneNumber,String orderNumber, String message) {
+    private void notifyCustomer(String phoneNumber,String orderNumber) {
 
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
 
@@ -244,7 +228,7 @@ public class CurrentJobOrdersActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        sendNotifications(document.get("messagingToken").toString(),"Order No. "+orderNumber,message);
+                        sendNotifications(document.get("messagingToken").toString(),"Order No. "+orderNumber,"Your Food is now preparing");
                     } else {
                     }
                 } else {

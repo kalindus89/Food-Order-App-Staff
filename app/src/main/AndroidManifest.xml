@@ -40,7 +40,7 @@
             android:name=".all_order_status_and_history.CurrentJobOrdersActivity"
             android:exported="true" />
         <activity
-            android:name=".all_order_status_and_history.CompletedJobOrdersActivity"
+            android:name=".all_order_status_and_history.HistoryJobOrdersActivity"
             android:exported="true" />
         <activity
             android:name=".view_order_foods.ViewOrderFoods"

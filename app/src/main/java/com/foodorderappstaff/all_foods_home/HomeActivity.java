@@ -31,7 +31,7 @@ import com.foodorderappstaff.R;
 import com.foodorderappstaff.SessionManagement;
 import com.foodorderappstaff.WelcomeActivity;
 import com.foodorderappstaff.all_order_status_and_history.AllOrderStatusActivity;
-import com.foodorderappstaff.all_order_status_and_history.CompletedJobOrdersActivity;
+import com.foodorderappstaff.all_order_status_and_history.HistoryJobOrdersActivity;
 import com.foodorderappstaff.all_order_status_and_history.CurrentJobOrdersActivity;
 import com.foodorderappstaff.notification_manager.ActivityTestNotification;
 import com.foodorderappstaff.notification_manager.ListenAllOrdersService;
@@ -382,7 +382,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ll_Third:
                 showToast("ll_Third");
                 drawerLayout.closeDrawer(navigationView, true);
-                Intent intent3 = new Intent(HomeActivity.this, CompletedJobOrdersActivity.class);
+                Intent intent3 = new Intent(HomeActivity.this, HistoryJobOrdersActivity.class);
                 startActivity(intent3);
                 break;
             case R.id.ll_Fourth:

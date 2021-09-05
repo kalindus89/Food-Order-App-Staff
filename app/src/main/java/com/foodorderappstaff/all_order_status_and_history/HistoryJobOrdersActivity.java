@@ -15,7 +15,7 @@ import com.foodorderappstaff.SessionManagement;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-public class CompletedJobOrdersActivity extends AppCompatActivity {
+public class HistoryJobOrdersActivity extends AppCompatActivity {
 
 
     ImageView goBack;
@@ -53,7 +53,7 @@ public class CompletedJobOrdersActivity extends AppCompatActivity {
 
         Query query = FirebaseDatabase.getInstance().getReference("OrderStatus").child(new SessionManagement().getPhone(this)).child("Completed").limitToFirst(10);
         allUserNotes = new FirebaseRecyclerOptions.Builder<OrderPlacedModel>().setQuery(query, OrderPlacedModel.class).build();
-        adapterOrderStatus = new AdapterOrderStatus(allUserNotes, this);
+        adapterOrderStatus = new AdapterOrderStatus(allUserNotes, this,false);
         recyclerView.setAdapter(adapterOrderStatus);
         adapterOrderStatus.notifyDataSetChanged();
 

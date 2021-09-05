@@ -231,8 +231,12 @@ public class AdapterOrderStatus extends FirebaseRecyclerAdapter<OrderPlacedModel
 
                                         notifyCustomer(model.getPhone(), orderId, "Your food is preparing");
 
-                                        FirebaseFirestore.getInstance().document("FoodOrders/" + model.getPhone() + "/orderFoods/00000orderHistory/ongoingOrderIds/" + orderId).update("status", selectStatus);
+                                        Map note = new HashMap();
+                                        note.put("status", selectStatus);
+                                        note.put("driverNumber",  new SessionManagement().getPhone(context));
 
+                                        FirebaseFirestore.getInstance().document("FoodOrders/" + model.getPhone() + "/orderFoods/00000orderHistory/ongoingOrderIds/" + orderId).update(note);
+                                        FirebaseFirestore.getInstance().document("FoodOrders/" + model.getPhone() + "/orderFoods/00000orderHistory/ongoingOrderIds/0000allOrders/placedOrderIds/" + orderId).update("driverNumber", new SessionManagement().getPhone(context));
                                         FirebaseDatabase.getInstance().getReference().child("PlaceOrders").child(orderId).removeValue();
 
                                         dialog.dismiss();

@@ -35,6 +35,7 @@ import com.foodorderappstaff.all_order_status_and_history.HistoryJobOrdersActivi
 import com.foodorderappstaff.all_order_status_and_history.CurrentJobOrdersActivity;
 import com.foodorderappstaff.notification_manager.ActivityTestNotification;
 import com.foodorderappstaff.notification_manager.ListenAllOrdersService;
+import com.foodorderappstaff.updateBanners.UpdateBannerActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -388,7 +389,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ll_Fourth:
                 showToast("ll_Fourth");
                 drawerLayout.closeDrawer(navigationView, true);
-                Intent intent4 = new Intent(HomeActivity.this, ActivityTestNotification.class);
+                Intent intent4 = new Intent(HomeActivity.this, UpdateBannerActivity.class);
                 startActivity(intent4);
                 break;
             case R.id.ll_Fifth:

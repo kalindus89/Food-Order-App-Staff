@@ -25,6 +25,21 @@
             app:met_singleLineEllipsis="true"
             app:met_textColor="@color/purple_500" />
 
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/foodId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="food Id"
+            android:visibility="gone"
+            android:textColor="@color/purple_500"
+            android:textSize="20sp"
+            app:met_baseColor="@color/purple_500"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/purple_500"
+            app:met_singleLineEllipsis="true"
+            app:met_textColor="@color/purple_500" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -207,7 +207,7 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="center"
                 android:maxLines="1"
-                android:text="Share"
+                android:text="Update Banners"
                 android:textColor="#FFF"
                 android:textSize="20sp" />
         </LinearLayout>

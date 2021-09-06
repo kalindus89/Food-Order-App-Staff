@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".send_notification_all_subscribers.SendNotificationsAllActivity"
+            android:exported="true" />
+        <activity
             android:name=".updateBanners.UpdateBannerActivity"
             android:exported="true" />
         <activity

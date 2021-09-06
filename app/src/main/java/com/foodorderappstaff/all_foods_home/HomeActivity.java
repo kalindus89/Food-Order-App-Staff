@@ -35,6 +35,7 @@ import com.foodorderappstaff.all_order_status_and_history.HistoryJobOrdersActivi
 import com.foodorderappstaff.all_order_status_and_history.CurrentJobOrdersActivity;
 import com.foodorderappstaff.notification_manager.ActivityTestNotification;
 import com.foodorderappstaff.notification_manager.ListenAllOrdersService;
+import com.foodorderappstaff.send_notification_all_subscribers.SendNotificationsAllActivity;
 import com.foodorderappstaff.updateBanners.UpdateBannerActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -64,7 +65,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     EditText searchKeyword;
     FloatingActionButton addNewMenu;
 
-    LinearLayout searchLayout, ll_First, ll_Second, current_status, ll_Third, ll_Fourth, ll_Fifth, ll_Sixth;
+    LinearLayout searchLayout, ll_First, ll_Second, current_status, ll_Third, ll_Fourth, ll_Fifth, ll_Sixth, send_Msg_all;
 
     DatabaseReference databaseReference;
     StorageReference storageReference;
@@ -348,6 +349,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         ll_Fourth = (LinearLayout) findViewById(R.id.ll_Fourth);
         ll_Fifth = (LinearLayout) findViewById(R.id.ll_Fifth);
         ll_Sixth = (LinearLayout) findViewById(R.id.ll_Sixth);
+        send_Msg_all = (LinearLayout) findViewById(R.id.send_Msg_all);
 
         drawerIcon.setOnClickListener(this);
         ll_First.setOnClickListener(this);
@@ -357,6 +359,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         ll_Fourth.setOnClickListener(this);
         ll_Fifth.setOnClickListener(this);
         ll_Sixth.setOnClickListener(this);
+        send_Msg_all.setOnClickListener(this);
     }
 
     @Override
@@ -377,8 +380,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.current_status:
                 drawerLayout.closeDrawer(navigationView, true);
-                 Intent intent2 = new Intent(HomeActivity.this, AllOrderStatusActivity.class);
-                 startActivity(intent2);
+                Intent intent2 = new Intent(HomeActivity.this, AllOrderStatusActivity.class);
+                startActivity(intent2);
                 break;
             case R.id.ll_Third:
                 showToast("ll_Third");
@@ -392,20 +395,23 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent4 = new Intent(HomeActivity.this, UpdateBannerActivity.class);
                 startActivity(intent4);
                 break;
+            case R.id.send_Msg_all:
+                drawerLayout.closeDrawer(navigationView, true);
+                Intent intent5 = new Intent(HomeActivity.this, SendNotificationsAllActivity.class);
+                startActivity(intent5);
+                break;
             case R.id.ll_Fifth:
                 showToast("ll_Fifth");
                 drawerLayout.closeDrawer(navigationView, true);
-                Intent intent5 = new Intent(HomeActivity.this, ActivityTestNotification.class);
-                startActivity(intent5);
+                Intent intent6 = new Intent(HomeActivity.this, ActivityTestNotification.class);
+                startActivity(intent6);
                 break;
             case R.id.ll_Sixth:
                 showToast("tv_logout");
                 drawerLayout.closeDrawer(navigationView, true);
-
                 new SessionManagement().setUserName(this, "no number", "no name", "log out");
-
-                Intent intent6 = new Intent(HomeActivity.this, WelcomeActivity.class);
-                startActivity(intent6);
+                Intent intent7 = new Intent(HomeActivity.this, WelcomeActivity.class);
+                startActivity(intent7);
                 finish();
                 break;
             default:

@@ -395,6 +395,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ll_Fifth:
                 showToast("ll_Fifth");
                 drawerLayout.closeDrawer(navigationView, true);
+                Intent intent5 = new Intent(HomeActivity.this, ActivityTestNotification.class);
+                startActivity(intent5);
                 break;
             case R.id.ll_Sixth:
                 showToast("tv_logout");

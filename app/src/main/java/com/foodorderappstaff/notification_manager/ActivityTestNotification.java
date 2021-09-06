@@ -27,7 +27,7 @@ import retrofit2.Response;
 public class ActivityTestNotification extends AppCompatActivity {
 
     Button sendMsg;
-    String userID="userID", title="User Title", message="user message";
+    String userID = "userID", title = "User Title", message = "user message";
     APIService apiService;
 
     @Override
@@ -35,7 +35,7 @@ public class ActivityTestNotification extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_notification);
 
-        sendMsg=findViewById(R.id.sendMsg);
+        sendMsg = findViewById(R.id.sendMsg);
 
 
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
@@ -44,8 +44,9 @@ public class ActivityTestNotification extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-              //  Snackbar.make(view,"this is test text",Snackbar.LENGTH_SHORT).show();
-                DocumentReference nycRef = FirebaseFirestore.getInstance().collection("FoodOrders").document("94777171342");
+                sendNotifications("aaa", title, message);
+                //  Snackbar.make(view,"this is test text",Snackbar.LENGTH_SHORT).show();
+        /*        DocumentReference nycRef = FirebaseFirestore.getInstance().collection("FoodOrders").document("94777171342");
 
                 nycRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -53,19 +54,20 @@ public class ActivityTestNotification extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
-                                Toast.makeText(getApplicationContext(),document.get("messagingToken").toString(), Toast.LENGTH_SHORT).show();;
-                                sendNotifications(document.get("messagingToken").toString(),title,message);
+                                Toast.makeText(getApplicationContext(), document.get("messagingToken").toString(), Toast.LENGTH_SHORT).show();
+                                ;
+                                sendNotifications(document.get("messagingToken").toString(), title, message);
                             } else {
                             }
                         } else {
                             Toast.makeText(getApplicationContext(), "Not ok big", Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
+                });*/
             }
         });
 
-      //  updateFirebaseToken();
+        //  updateFirebaseToken();
     }
   /*  private void updateFirebaseToken() {
 
@@ -91,7 +93,7 @@ public class ActivityTestNotification extends AppCompatActivity {
     }*/
 
     public void sendNotifications(String usertoken, String title, String message) {
-        Data data = new Data(title, message);
+       /* Data data = new Data(title, message);
         NotificationSender sender = new NotificationSender(data, usertoken);
       //  Toast.makeText(getApplicationContext(), "111111 ", Toast.LENGTH_LONG).show();
         apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
@@ -109,6 +111,29 @@ public class ActivityTestNotification extends AppCompatActivity {
             public void onFailure(Call<MyResponse> call, Throwable t) {
 
             }
+        });*/
+
+        Data notification = new Data("title", "message");
+        NotificationSender toTopic = new NotificationSender();
+
+        toTopic.to =new StringBuilder("/topics/").append("news").toString();
+        toTopic.data=notification;
+
+        apiService.sendNotification(toTopic).enqueue(new Callback<MyResponse>() {
+            @Override
+            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+
+                if(response.isSuccessful()){
+                    Toast.makeText(getApplicationContext(), "send", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<MyResponse> call, Throwable t) {
+
+            }
         });
+
     }
 }

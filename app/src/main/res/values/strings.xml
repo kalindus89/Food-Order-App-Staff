@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FoodOrderAppStaff</string>
+    <string name="app_name">Food Staff</string>
     <string name="welcome_text">No matter where you are: Whether your are at home, or in the office, or on the beach - we will find you and we will feed you.</string>
     <string name="d_channel_id">channel_1</string>
 

@@ -126,7 +126,7 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="center"
                 android:maxLines="1"
-                android:text="Cart"
+                android:text="Your Jobs"
                 android:textColor="#FFF"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -153,7 +153,7 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="center"
                 android:maxLines="1"
-                android:text="All Orders"
+                android:text="New Orders"
                 android:textColor="#FFF"
                 android:textSize="20sp" />
         </LinearLayout>

@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -85,9 +86,7 @@ public class FoodsListActivity extends AppCompatActivity {
         firebaseDatabase= FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
 
-        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         Query query=FirebaseDatabase.getInstance().getReference().child("Foods").orderByChild("menuID").equalTo(catId);
 

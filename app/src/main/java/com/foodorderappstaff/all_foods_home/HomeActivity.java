@@ -23,9 +23,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.foodorderappstaff.R;
 import com.foodorderappstaff.SessionManagement;
@@ -59,13 +61,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     NavigationView navigationView;
     DrawerLayout drawerLayout;
-    ImageView drawerIcon, searchIcon, backToMainPage;
-    TextView textView;
+    ImageView drawerIcon;
     RecyclerView recyclerView;
     EditText searchKeyword;
     FloatingActionButton addNewMenu;
 
-    LinearLayout searchLayout, ll_First, ll_Second, current_status, ll_Third, ll_Fourth, ll_Fifth, ll_Sixth, send_Msg_all;
+    LinearLayout  ll_First, ll_Second, current_status, ll_Third, ll_Fourth, ll_Fifth, ll_Sixth, send_Msg_all;
 
     DatabaseReference databaseReference;
     StorageReference storageReference;
@@ -78,6 +79,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     Uri saveUri;
     private final int PICK_IMAGE_REQUEST = 71;
 
+    ShimmerFrameLayout shimmerFrameLayout_Categories;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,10 +89,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         recyclerView = findViewById(R.id.recyclerView);
         addNewMenu = findViewById(R.id.addNewMenu);
-        searchIcon = findViewById(R.id.searchIcon);
-        textView = findViewById(R.id.textView);
-        searchLayout = findViewById(R.id.searchLayout);
-        backToMainPage = findViewById(R.id.backToMainPage);
         searchKeyword = findViewById(R.id.searchKeyword);
 
         onSetNavigationDrawerEvents();
@@ -103,26 +101,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View view) {
 
                 showDialogBoxToUploadNewMenu(true, "");
-
-            }
-        });
-
-        backToMainPage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                searchIcon.setVisibility(View.VISIBLE);
-                textView.setVisibility(View.VISIBLE);
-                searchLayout.setVisibility(View.GONE);
-                searchKeyword.setText("");
-            }
-        });
-
-        searchIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                searchIcon.setVisibility(View.GONE);
-                textView.setVisibility(View.GONE);
-                searchLayout.setVisibility(View.VISIBLE);
 
             }
         });
@@ -150,6 +128,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+
+        shimmerFrameLayout_Categories = (ShimmerFrameLayout) findViewById(R.id.shimmerFrameLayout_Categories);
+        shimmerFrameLayout_Categories.setVisibility(View.VISIBLE);
+        shimmerFrameLayout_Categories.startShimmer();
 
         loadData();
 
@@ -298,14 +280,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void loadData() {
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setHasFixedSize(true);
-
         Query query = FirebaseDatabase.getInstance().getReference().child("Category");
 
         allUserNotes = new FirebaseRecyclerOptions.Builder<CategoryModel>().setQuery(query, CategoryModel.class).build();
-        catAdapter = new AdapterCategory(allUserNotes, this);
+        catAdapter = new AdapterCategory(allUserNotes, this,shimmerFrameLayout_Categories);
+
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         recyclerView.setAdapter(catAdapter);
         catAdapter.updateOptions(allUserNotes);
@@ -318,7 +298,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         Query query = FirebaseDatabase.getInstance().getReference().child("Category").orderByChild("name").startAt(keyword).endAt(keyword + "\uf8ff");
 
         FirebaseRecyclerOptions<CategoryModel> allUserNotes2 = new FirebaseRecyclerOptions.Builder<CategoryModel>().setQuery(query, CategoryModel.class).build();
-        catAdapter = new AdapterCategory(allUserNotes2, this);
+        catAdapter = new AdapterCategory(allUserNotes2, this,shimmerFrameLayout_Categories);
 
         recyclerView.setAdapter(catAdapter);
         catAdapter.startListening();

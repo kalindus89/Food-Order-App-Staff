@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.foodorderappstaff.R;
@@ -23,11 +24,13 @@ public class AdapterCategory extends FirebaseRecyclerAdapter<CategoryModel,Adapt
 
     Context context;
     FirebaseRecyclerOptions<CategoryModel> options;
+    ShimmerFrameLayout shimmerFrameLayout_Categories;
 
-    public AdapterCategory(@NonNull FirebaseRecyclerOptions<CategoryModel> options, Context context) {
+    public AdapterCategory(@NonNull FirebaseRecyclerOptions<CategoryModel> options, Context context,ShimmerFrameLayout shimmerFrameLayout_Categories) {
         super(options);
         this.context = context;
         this.options = options;
+        this.shimmerFrameLayout_Categories = shimmerFrameLayout_Categories;
     }
 
 
@@ -55,7 +58,7 @@ public class AdapterCategory extends FirebaseRecyclerAdapter<CategoryModel,Adapt
 
 
         holder.catName.setText(model.getName());
-        Picasso.get().load(model.getImage()).placeholder(R.drawable.loading_image).into(holder.cateImage);
+        Picasso.get().load(model.getImage()).placeholder(R.drawable.loading_gif_2).into(holder.cateImage);
 
     }
 
@@ -64,6 +67,8 @@ public class AdapterCategory extends FirebaseRecyclerAdapter<CategoryModel,Adapt
     @Override
     public CatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_category_layout,parent,false);
+        shimmerFrameLayout_Categories.stopShimmer();
+        shimmerFrameLayout_Categories.setVisibility(View.GONE);
         return new CatViewHolder(view);
     }
 

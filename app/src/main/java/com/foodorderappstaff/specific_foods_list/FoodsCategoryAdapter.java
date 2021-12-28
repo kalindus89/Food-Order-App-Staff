@@ -54,7 +54,7 @@ public class FoodsCategoryAdapter extends FirebaseRecyclerAdapter<FoodsModel, Fo
         });
 
         holder.foodName.setText(model.getName());
-        Picasso.get().load(model.getImage()).placeholder(R.drawable.loading_image).into(holder.foodImage);
+        Picasso.get().load(model.getImage()).placeholder(R.drawable.loading_new).into(holder.foodImage);
 
     }
 

@@ -11,7 +11,6 @@
         android:id="@+id/topLayout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/purple_500"
         android:orientation="horizontal">
 
         <ImageView
@@ -21,7 +20,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             app:srcCompat="@drawable/go_back"
-            app:tint="@color/white" />
+            app:tint="@color/black" />
 
         <TextView
             android:layout_width="match_parent"
@@ -29,7 +28,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="20dp"
             android:text="Foods List"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
     </LinearLayout>

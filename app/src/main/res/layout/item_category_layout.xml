@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
-            android:src="@drawable/loading_gif_2" />
+            android:src="@drawable/loading_new" />
 
         <TextView
             android:id="@+id/catName"

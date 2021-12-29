@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
-        android:layout_margin="16dp"
         android:weightSum="10"
+        android:background="@drawable/item_gradient_color"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="9"
+            android:layout_margin="16dp"
             android:orientation="vertical">
 
             <TextView

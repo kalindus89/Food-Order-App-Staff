@@ -12,9 +12,13 @@
         <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/drawable-v24/ic_baseline_shopping_cart_24.xml" value="0.2703125" />
         <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/drawable-v24/menu_icon.xml" value="0.2703125" />
         <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/drawable-v24/round_corners.xml" value="0.2703125" />
+        <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/drawable/background5.xml" value="0.3769230769230769" />
+        <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/drawable/edittext_background2.xml" value="0.3769230769230769" />
         <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/drawable/expand_more.xml" value="0.2703125" />
         <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/drawable/full_round_circle.xml" value="0.2703125" />
         <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/drawable/ic_baseline_playlist_add_24.xml" value="0.2703125" />
+        <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/drawable/item_gradient_color.xml" value="0.3769230769230769" />
+        <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/drawable/login_btn_background4.xml" value="0.3769230769230769" />
         <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/drawable/white_skin.xml" value="0.3769230769230769" />
         <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/layout/activity_current_jobs.xml" value="0.36684782608695654" />
         <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/layout/activity_foods_list.xml" value="0.1793478260869565" />
@@ -22,7 +26,7 @@
         <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/layout/activity_order_history.xml" value="0.36666666666666664" />
         <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/layout/activity_order_status.xml" value="0.1793478260869565" />
         <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/layout/activity_send_notifications_all_subscribers.xml" value="0.2246376811594203" />
-        <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/layout/activity_sing_in.xml" value="0.1793478260869565" />
+        <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/layout/activity_sing_in.xml" value="0.264" />
         <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/layout/activity_test_notification.xml" value="0.18659420289855072" />
         <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/layout/activity_update_banner.xml" value="0.2246376811594203" />
         <entry key="..\:/Work/Android/AndroidStudioProjects/AndroidStudioProjectsAll/FoodOrderAppStaff/app/src/main/res/layout/activity_view_order_foods.xml" value="0.264" />

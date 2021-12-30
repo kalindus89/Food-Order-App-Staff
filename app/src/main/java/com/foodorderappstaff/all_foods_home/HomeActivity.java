@@ -349,7 +349,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 drawerLayout.openDrawer(navigationView, true);
                 break;
             case R.id.ll_First:
-                showToast("ll_First");
+               // showToast("ll_First");
                 drawerLayout.closeDrawer(navigationView, true);
                 break;
             case R.id.ll_Second:
@@ -364,13 +364,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent2);
                 break;
             case R.id.ll_Third:
-                showToast("ll_Third");
+             //   showToast("ll_Third");
                 drawerLayout.closeDrawer(navigationView, true);
                 Intent intent3 = new Intent(HomeActivity.this, HistoryJobOrdersActivity.class);
                 startActivity(intent3);
                 break;
             case R.id.ll_Fourth:
-                showToast("ll_Fourth");
+              //  showToast("ll_Fourth");
                 drawerLayout.closeDrawer(navigationView, true);
                 Intent intent4 = new Intent(HomeActivity.this, UpdateBannerActivity.class);
                 startActivity(intent4);
@@ -381,13 +381,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent5);
                 break;
             case R.id.ll_Fifth:
-                showToast("ll_Fifth");
+               // showToast("ll_Fifth");
                 drawerLayout.closeDrawer(navigationView, true);
                 Intent intent6 = new Intent(HomeActivity.this, ActivityTestNotification.class);
                 startActivity(intent6);
                 break;
             case R.id.ll_Sixth:
-                showToast("tv_logout");
+              //  showToast("tv_logout");
                 drawerLayout.closeDrawer(navigationView, true);
                 new SessionManagement().setUserName(this, "no number", "no name", "log out");
                 Intent intent7 = new Intent(HomeActivity.this, WelcomeActivity.class);
@@ -395,7 +395,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 finish();
                 break;
             default:
-                showToast("Default");
+              //  showToast("Default");
                 drawerLayout.closeDrawer(navigationView, true);
                 break;
 

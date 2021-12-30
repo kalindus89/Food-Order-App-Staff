@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/my_bg"
+    android:background="@drawable/bg_new"
+    android:orientation="vertical"
     tools:context=".send_notification_all_subscribers.SendNotificationsAllActivity">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#B5000000">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:layout_marginTop="100dp"
-        android:text="Enter your message"
-        android:textColor="@color/white"
-        android:textSize="30dp"
-        android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="100dp"
+            android:text="Send News To Subscribers"
+            android:textColor="@color/white"
+            android:textSize="25dp"
+            android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -36,6 +41,9 @@
             android:hint="Title"
             android:inputType="text"
             android:textSize="20sp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            app:met_textColorHint="#A3A1A1"
             app:met_baseColor="@color/white"
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/white"
@@ -52,6 +60,7 @@
             android:textSize="20sp"
             app:met_baseColor="@color/white"
             app:met_floatingLabel="highlight"
+            app:met_textColorHint="#A3A1A1"
             app:met_primaryColor="@color/white"
             app:met_singleLineEllipsis="true"
             app:met_textColor="@color/white" />
@@ -64,8 +73,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:background="@drawable/round_corners"
-            android:backgroundTint="#87BA0B"
+            android:background="@drawable/round_corners_full"
             android:text="Notify All"
             android:textColor="@color/white" />
 
@@ -78,5 +86,5 @@
         android:visibility="gone"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"/>
-
-</RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>
